@@ -10,11 +10,15 @@ import org.asocframework.dts.model.ActionInvoker;
 import org.asocframework.dts.model.DtsAction;
 import org.asocframework.dts.model.DtsActivity;
 import org.asocframework.dts.model.DtsState;
+import org.asocframework.dts.repair.DtsRepairLoop;
+import org.asocframework.dts.repair.RepairLoop;
 import org.asocframework.dts.store.DtsBizStoreDb;
 import org.asocframework.dts.store.dal.DtsActionDAO;
 import org.asocframework.dts.store.dal.DtsActivityDAO;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.sql.DataSource;
@@ -28,7 +32,7 @@ import java.util.UUID;
  * @version $Id: DtsBizAnnotation ,v 1.0 2017/7/12 dhj Exp $
  * @name
  */
-public class DtsBizServiceSupport implements DtsBizService,InitializingBean {
+public class DtsBizServiceSupport implements DtsBizService,InitializingBean, ApplicationListener<ContextRefreshedEvent> {
 
     private DataSource dataSource;
 
@@ -36,9 +40,11 @@ public class DtsBizServiceSupport implements DtsBizService,InitializingBean {
 
     private DtsBizManager dtsBizManager;
 
-    private String cron;
+    private int delay = 300;
 
-    private int retryTimes;
+    private int retryTimes = 3;
+
+    private RepairLoop repairLoop;
 
 
     public void setRetryTimes(int retryTimes) {
@@ -51,6 +57,13 @@ public class DtsBizServiceSupport implements DtsBizService,InitializingBean {
     public DtsBizServiceSupport(DataSource dataSource, String dbType) {
         this.dataSource = dataSource;
         this.dbType = dbType;
+    }
+
+    public DtsBizServiceSupport(DataSource dataSource, String dbType,int delay,int retryTimes) {
+        this.dataSource = dataSource;
+        this.dbType = dbType;
+        this.delay = delay;
+        this.retryTimes =retryTimes;
     }
 
     @Override
@@ -78,6 +91,8 @@ public class DtsBizServiceSupport implements DtsBizService,InitializingBean {
         }
     }
 
+
+
     @Override
     public void rollback(List<DtsAction> actions, DtsBizContext dtsBizContext) {
         DtsAction  action;
@@ -98,6 +113,16 @@ public class DtsBizServiceSupport implements DtsBizService,InitializingBean {
         checkDBParam();
         dtsBizManager = new DtsBizManager(this.dataSource);
         initDAO();
+
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+
+    }
+
+    private void initRepair(){
+        repairLoop = new DtsRepairLoop();
     }
 
     private void initDAO(){
@@ -167,15 +192,17 @@ public class DtsBizServiceSupport implements DtsBizService,InitializingBean {
         this.dtsBizManager = dtsBizManager;
     }
 
-    public String getCron() {
-        return cron;
+    public int getDelay() {
+        return delay;
     }
 
-    public void setCron(String cron) {
-        this.cron = cron;
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 
     public int getRetryTimes() {
         return retryTimes;
     }
+
+
 }
