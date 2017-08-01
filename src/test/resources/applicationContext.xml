@@ -1,0 +1,57 @@
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:task="http://www.springframework.org/schema/task"
+		xsi:schemaLocation="
+       	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+
+	<aop:aspectj-autoproxy />
+	<task:annotation-driven/>
+	<context:component-scan base-package="org.asocframework.dts">
+	</context:component-scan>
+	<bean id="appConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<array>
+				<value>classpath:env.properties</value>
+			</array>
+		</property>
+	</bean>
+	<import resource="springbeans-datasource.xml"/>
+
+	<bean id="assetAddBO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="org.asocframework.dts.test.biz.bo.AssetAddBO"/>
+		<property name="target" ref="assetAddBOTarget"/>
+		<property name="interceptorNames">
+			<list>
+				<value>dtsBizIntercepter</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="assetMinusBO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="org.asocframework.dts.test.biz.bo.AssetMinusBO"/>
+		<property name="target" ref="assetMinusBOTarget"/>
+		<property name="interceptorNames">
+			<list>
+				<value>dtsBizIntercepter</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="dtsBizIntercepter" class="org.asocframework.dts.transaction.DtsBizIntercepter">
+		<property name="dtsBizService" ref="dtsBizService"/>
+	</bean>
+
+	<bean id="dtsBizService" class="org.asocframework.dts.transaction.DtsBizServiceSupport">
+		<property name="dataSource" ref="atomDataSource"/>
+		<property name="dbType" value="mysql"/>
+	</bean>
+
+
+</beans>

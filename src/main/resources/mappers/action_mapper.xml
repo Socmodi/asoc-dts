@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="asoc.dts.action" >
+
+    <resultMap id="BaseResultMap" type="org.asocframework.dts.store.dal.DtsActionDO" >
+        <result column="tx_id" property="txId" />
+        <result column="state" property="state" />
+        <result column="name" property="name" />
+        <result column="action_id" property="actionId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <insert id="insert" parameterType="org.asocframework.dts.store.dal.DtsActionDO" >
+        insert into atom_action (tx_id, state, action_id,name)
+        values (#{txId}, #{state}, #{actionId},#{name})
+    </insert>
+
+
+    <insert id="delete" >
+        DELETE FROM  atom_action where tx_id=#{txId} and action_id = #{actionId}
+    </insert>
+
+    <select id="findActionByTxId" resultMap="BaseResultMap">
+        SELECT *  FROM  atom_action  where tx_id=#{txId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.asocframework.dts.test.dal.mapper.AssetSerialMapper" >
+    
+    <resultMap id="BaseResultMap" type="org.asocframework.dts.test.dal.model.AssetSerial" >
+        <result column="amount" property="amount" />
+        <result column="id" property="id" />
+        <result column="txId" property="txId" />
+        <result column="user_id" property="userId" />
+        <result column="bookkeeping" property="bookkeeping" />
+        <result column="status" property="status" />
+        <result column="amount" property="amount" />
+    </resultMap>
+
+    <insert id="insert" parameterType="org.asocframework.dts.test.dal.model.AssetSerial" >
+        insert into asset_serial (txId, user_id, bookkeeping, amount)
+        values (#{txId}, #{userId}, #{bookkeeping}, #{amount})
+    </insert>
+    
+    <select id="delete"  parameterType="org.asocframework.dts.test.dal.model.AssetSerial">
+        update asset_serial <set>
+        status = -1 </set>
+        where  txId = #{txId}
+    </select>
+
+    <update id="update" parameterType="org.asocframework.dts.test.dal.model.AssetSerial">
+        update asset_serial <set>
+            status = 1 </set>
+        where  txId = #{txId}
+    </update>
+
+</mapper>
