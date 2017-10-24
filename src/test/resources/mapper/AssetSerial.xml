@@ -29,4 +29,12 @@
         where  txId = #{txId}
     </update>
 
+    <select id="select" resultMap="BaseResultMap">
+        select * from asset_serial;
+    </select>
+
+    <select id="find" resultMap="BaseResultMap">
+        select * from asset_serial where txId=#{txId} for update;
+    </select>
+
 </mapper>

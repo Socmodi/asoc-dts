@@ -1,7 +1,9 @@
 package org.asocframework.dts.test.example;
 
+import com.alibaba.fastjson.JSON;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.asocframework.dts.test.biz.TransferService;
+import org.asocframework.dts.test.dal.model.AssetSerial;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,6 +41,14 @@ public class DtsExample {
         transferService.tranfer();
 
         Thread.sleep(10000L);
+    }
+
+    @Test
+    public void read(){
+        AssetSerial assetSerial = new AssetSerial();
+        AssetSerial[] assetSerials = new AssetSerial[]{assetSerial,new AssetSerial()};
+        System.out.println(JSON.toJSONString(assetSerials));
+        //transferService.read();
     }
 
 }

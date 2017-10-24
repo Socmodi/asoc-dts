@@ -122,7 +122,7 @@ public class DtsBizServiceSupport implements DtsBizService,InitializingBean, App
     }
 
     private void initRepair(){
-        repairLoop = new DtsRepairLoop();
+        //repairLoop = new DtsRepairLoop();
     }
 
     private void initDAO(){

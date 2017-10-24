@@ -17,6 +17,8 @@ public class AssetSerial {
 
     private int bookkeeping;
 
+    private int status;
+
     public int getId() {
         return id;
     }
@@ -55,5 +57,13 @@ public class AssetSerial {
 
     public void setBookkeeping(int bookkeeping) {
         this.bookkeeping = bookkeeping;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
