@@ -39,9 +39,19 @@ public class DtsExample {
 //            e.printStackTrace();
 //        }
         transferService.tranfer();
-
         Thread.sleep(10000L);
     }
+
+    @Test
+    public void  batch() throws InterruptedException {
+
+        for(int i=0;i<20;i++){
+            Thread.sleep(1000L);
+            transferService.tranfer();
+        }
+        Thread.sleep(10000L);
+    }
+
 
     @Test
     public void read(){
