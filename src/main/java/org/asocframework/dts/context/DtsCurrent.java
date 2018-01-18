@@ -44,9 +44,7 @@ public class DtsCurrent {
     }
 
     public static boolean save(DtsActivity activity){
-        if(activitys.containsKey(activity.getTxId())){
-            return true;
-        }else {
+        if(!activitys.containsKey(activity.getTxId())){
             //activitys.put(activity.getTxId(),activity);
             currentActivity.set(activity);
         }
